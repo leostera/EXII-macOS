@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "USBDeviceSwift",
+        "repositoryURL": "https://github.com/Arti3DPlayer/USBDeviceSwift.git",
+        "state": {
+          "branch": "master",
+          "revision": "4f9ce757a1ac6c479c3114e6043d5d4d65458c29",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

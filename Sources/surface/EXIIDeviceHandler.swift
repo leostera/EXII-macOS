@@ -55,11 +55,12 @@ class EXIIDeviceHandler {
         
         while true {
             for d in devices {
-//                let res = try! d.value.status()
-//                print(Utils.now(), res)
-
-                let data = try! d.value.coordinate()!
-                print(Utils.now(), "Raw: (X=\(data.xRaw)\t Y=\(data.yRaw)) \t \t Compensated: (X=\(data.xCompensated)\t Y=\(data.yCompensated))")
+                do {
+                    let data = try d.value.coordinate()!
+                    NotificationCenter.default.post(name: .EXIICoordinateData, object: [ "data": data ])
+                } catch {
+                    
+                }
             }
         }
     }

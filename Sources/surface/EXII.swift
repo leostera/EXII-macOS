@@ -10,6 +10,11 @@ import IOKit
 import IOKit.usb
 import IOKit.usb.IOUSBLib
 
+public extension Notification.Name {
+    static let EXIICoordinateData = Notification.Name("EXIICoordinateData")
+    static let EXIIDeviceStatus = Notification.Name("EXIIDeviceStatus")
+}
+
 enum EXIIReport: UInt8 {
     case CoordinateData = 1 // Get Raw and Adjusted Coordinates from the device
     case Calibrate = 4 // Calibrate device
@@ -93,6 +98,7 @@ struct EXIICoordinateData {
     public var yCompensated: UInt16
     public var xRaw: Int16
     public var yRaw: Int16
+    public var asByteArray: Array<UInt8>
 }
 
 class EXIIDevice {
@@ -185,7 +191,8 @@ class EXIIDevice {
                     xCompensated: UInt16(data[4]) << 8 + UInt16(data[3]),
                     yCompensated: UInt16(data[6]) << 8 + UInt16(data[5]),
                     xRaw: Int16(data[8] ) << 8 + Int16(data[7]),
-                    yRaw: Int16(data[10]) << 8 + Int16(data[9])
+                    yRaw: Int16(data[10]) << 8 + Int16(data[9]),
+                    asByteArray: [data[4], data[3], data[6], data[5], data[8], data[7], data[10], data[9]]
                 )
             } catch {
                 print(Utils.now(), "Error reading from pipe", p.pipeRef)

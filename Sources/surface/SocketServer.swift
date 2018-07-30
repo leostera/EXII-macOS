@@ -16,13 +16,13 @@ class SocketServer {
     var listener: Socket
     let path = NSString(string: "/tmp/surface.sock").expandingTildeInPath
     var buffer_size: Int = 4096
-    
+
     init() throws {
         try listener = Socket.create(family: .unix)
         try listener.listen(on: path, maxBacklogSize: Socket.SOCKET_DEFAULT_MAX_BACKLOG)
         print("Listening on path: \(path)")
     }
-    
+
     @objc func onCoordinateData(notification: NSNotification) {
         guard let nobj = notification.object as? NSDictionary else {
             return
@@ -33,7 +33,7 @@ class SocketServer {
         print(data.asByteArray)
         try? socket?.write(from: Data.init(bytes: data.asByteArray))
     }
-    
+
     @objc func run() {
         NotificationCenter.default.addObserver(
             self,
@@ -41,9 +41,6 @@ class SocketServer {
             name: .EXIICoordinateData,
             object: nil
         )
-        
-        socket = try! listener.acceptClientConnection()
-        print("Accepted connection from: \(String(describing: socket?.remotePath!))")
         
         RunLoop.current.run()
     }

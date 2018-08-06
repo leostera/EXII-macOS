@@ -182,7 +182,8 @@ class EXIIDevice {
         for p in deviceInfo.pipes {
             do {
                 try readPipe(pipeRef: p.pipeRef, data: &data, size: &length)
-                let touchStatus = (data[2] << 6) == 0b01000000 ? EXIITouchStatus.LiftUp : EXIITouchStatus.TouchDown
+                let touchStatus = data[2] == 128 ? EXIITouchStatus.LiftUp : EXIITouchStatus.TouchDown
+                let touchBit: UInt8 = data[2] == 128 ? 1 : 0
                 return EXIICoordinateData(
                     reportId: EXIIReport.CoordinateData,
                     loopCounter: data[1],
@@ -192,7 +193,7 @@ class EXIIDevice {
                     yCompensated: UInt16(data[6]) << 8 + UInt16(data[5]),
                     xRaw: Int16(data[8] ) << 8 + Int16(data[7]),
                     yRaw: Int16(data[10]) << 8 + Int16(data[9]),
-                    asByteArray: [data[4], data[3], data[6], data[5], data[8], data[7], data[10], data[9]]
+                    asByteArray: [touchBit, data[4], data[3], data[6], data[5], data[8], data[7], data[10], data[9]]
                 )
             } catch {
                 print(Utils.now(), "Error reading from pipe", p.pipeRef)

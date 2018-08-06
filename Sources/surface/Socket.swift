@@ -2170,6 +2170,11 @@ public class Socket: SocketReader, SocketWriter {
             } else {
                 errorString = String(validatingUTF8: gai_strerror(errno)) ?? "Unknown error code."
             }
+            print("status", status)
+            print("error number", errno)
+            print("eai system", EAI_SYSTEM)
+            print("gai_strerror", String(cString: gai_strerror(errno)))
+            print("error string", errorString)
             throw Error(code: Socket.SOCKET_ERR_GETADDRINFO_FAILED, reason: errorString)
         }
         
@@ -2359,7 +2364,8 @@ public class Socket: SocketReader, SocketWriter {
         #else
         if Darwin.listen(self.socketfd, Int32(maxBacklogSize)) < 0 {
             
-            throw Error(code: Socket.SOCKET_ERR_LISTEN_FAILED, reason: self.lastError())
+            let extractedExpr: String = self.lastError()
+            throw Error(code: Socket.SOCKET_ERR_LISTEN_FAILED, reason: extractedExpr)
         }
         #endif
         
